@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  sonarqube:
+    image: sonarqube:alpine
+    restart: always
+    # Traefik labels are suggested as an example for people using Traefik,
+    # remove them if you are using another reverse proxy.
+    labels:
+      traefik.enable: 'true'
+      traefik.frontend.rule: "Host:${HOSTNAME}"
+      traefik.port: '9000'
+    # If you don't want to use a reverse proxy (not suitable for production!)
+    # ports:
+    #  - "9000:9000"
+    volumes:
+      - ./docker-volume/sonarqube/conf:/opt/sonarqube/conf
+      - ./docker-volume/sonarqube/data:/opt/sonarqube/data
+      - ./docker-volume/sonarqube/extensions:/opt/sonarqube/extensions
+    environment:
+      - SONARQUBE_JDBC_USERNAME=${DB_USERNAME}
+      - SONARQUBE_JDBC_PASSWORD=${DB_PASSWORD}
+      - SONARQUBE_JDBC_URL=jdbc:mysql://db/${DB_NAME}
+    env_file:
+      - sonarqube.env
+      - db.common.env
+    depends_on:
+      - db
+
+  db:
+    image: mariadb
+    restart: always
+    volumes:
+      - ./docker-volume/db:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    env_file:
+      - db.common.env
+      - db.env
