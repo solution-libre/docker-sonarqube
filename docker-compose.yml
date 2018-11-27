@@ -21,9 +21,6 @@ services:
       - SONARQUBE_JDBC_USERNAME=${DB_USERNAME}
       - SONARQUBE_JDBC_PASSWORD=${DB_PASSWORD}
       - SONARQUBE_JDBC_URL=jdbc:mysql://db/${DB_NAME}
-    env_file:
-      - sonarqube.env
-      - db.common.env
     depends_on:
       - db
 
@@ -37,5 +34,4 @@ services:
       - MYSQL_USER=${DB_USERNAME}
       - MYSQL_PASSWORD=${DB_PASSWORD}
     env_file:
-      - db.common.env
       - db.env
