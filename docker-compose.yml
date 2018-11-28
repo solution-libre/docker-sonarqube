@@ -17,20 +17,18 @@ services:
       - ./docker-volume/sonarqube/data:/opt/sonarqube/data
       - ./docker-volume/sonarqube/logs:/opt/sonarqube/logs
     environment:
-      - SONARQUBE_JDBC_USERNAME=${DB_USERNAME}
-      - SONARQUBE_JDBC_PASSWORD=${DB_PASSWORD}
-      - SONARQUBE_JDBC_URL=jdbc:mysql://db/${DB_NAME}
+      sonar.jdbc.username: ${DB_USERNAME}
+      sonar.jdbc.password: ${DB_PASSWORD}
+      sonar.jdbc.url: jdbc:postgresql://db:5432/${DB_NAME}
     depends_on:
       - db
 
   db:
-    image: mariadb
-    restart: always
-    volumes:
-      - ./docker-volume/db:/var/lib/mysql
+    image: postgres:alpine
     environment:
-      - MYSQL_DATABASE=${DB_NAME}
-      - MYSQL_USER=${DB_USERNAME}
-      - MYSQL_PASSWORD=${DB_PASSWORD}
-    env_file:
-      - db.env
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - ./docker-volume/db:/var/lib/postgresql/data
+    restart: "always"
