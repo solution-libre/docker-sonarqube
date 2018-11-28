@@ -14,9 +14,8 @@ services:
     # ports:
     #  - "9000:9000"
     volumes:
-      - ./docker-volume/sonarqube/conf:/opt/sonarqube/conf
       - ./docker-volume/sonarqube/data:/opt/sonarqube/data
-      - ./docker-volume/sonarqube/extensions:/opt/sonarqube/extensions
+      - ./docker-volume/sonarqube/logs:/opt/sonarqube/logs
     environment:
       - SONARQUBE_JDBC_USERNAME=${DB_USERNAME}
       - SONARQUBE_JDBC_PASSWORD=${DB_PASSWORD}
